@@ -13,9 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHolder> {
+public class NoteCardGivenTopicAdapter extends RecyclerView.Adapter<NoteCardGivenTopicAdapter.ViewHolder> {
 
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -23,7 +24,9 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
 
     private Activity activity;
     private OnItemClickListener mListener;
-    public ArrayList<String> flashcardTopics = new ArrayList<String>();
+    public ArrayList<Flashcard> flashcardsGivenTopic = new ArrayList<Flashcard>();
+    private String topic;
+    private HashMap<String, ArrayList<Flashcard>> map;
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         mListener = listener;
@@ -61,9 +64,14 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
 
 
 
-    public NoteCardAdapter(List<String> flashCardTopics, Activity activity) {
 
-        this.flashcardTopics.addAll(flashCardTopics);
+    public NoteCardGivenTopicAdapter(String topic, Activity activity) {
+
+        this.topic = topic;
+        //Load data for topic
+        map = PersistentData.persistenceLoadCardsGivenTopic(activity);
+
+        this.flashcardsGivenTopic.addAll(map.get(topic));
         this.activity = activity;
     }
 
@@ -92,15 +100,15 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
             public boolean onLongClick(View view) {
 
 
-                removeItem(flashcardTopics.get(position));
+                removeItem(flashcardsGivenTopic.get(position).getFrontText());
                 return true;
 
             }
 
         });
 
-        String topic = flashcardTopics.get(position);
-        holder.flashTopic.setText(topic);
+        Flashcard card = flashcardsGivenTopic.get(position);
+        holder.flashTopic.setText(card.getFrontText());
 
         //Alternate background colors for even and odd items in the list
         int bgColor = position % 2 == 0 ? 230 : 255;
@@ -110,17 +118,19 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return flashcardTopics.size();
+        return flashcardsGivenTopic.size();
     }
 
     //This removes the data from our dataset
     private void removeItem(String topic) {
 
 
-        int position = flashcardTopics.indexOf(topic);
-        flashcardTopics.remove(position);
+        int position = flashcardsGivenTopic.indexOf(topic);
+        flashcardsGivenTopic.remove(position);
         notifyItemRemoved(position);
-        PersistentData.persistenceSaveTopics(this.activity, flashcardTopics);
+
+        map.put(topic, flashcardsGivenTopic);
+        PersistentData.persistenceSaveCardsForATopic(this.activity, map);
 
     }
 

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CreateNotecards extends AppCompatActivity {
@@ -23,7 +25,7 @@ public class CreateNotecards extends AppCompatActivity {
     private static final String TAG = CreateNotecards.class.getSimpleName();
 
     private EditText addTopicText;
-    private List<String> list;
+    private ArrayList<String> list;
     private NoteCardAdapter adapter;
 
     @Override
@@ -32,14 +34,10 @@ public class CreateNotecards extends AppCompatActivity {
         setContentView(R.layout.activity_create_notecards);
 
         createNotecardContext = getApplicationContext();
-        list = PersistentData.loadPersistantData(this);
+        list = PersistentData.persistenceLoadTopics(this);
         addTopicText = findViewById(R.id.editText);
-        addTopicText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                addTopicText.setText("");
-            }
-        });
+
+
 
 
         adapter = new NoteCardAdapter(list, this);
@@ -54,6 +52,13 @@ public class CreateNotecards extends AppCompatActivity {
         adapter.setOnItemClickListener(new NoteCardAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+
+                //Pass the string name of the topic to the activity so that it knows
+                //the key to store data in hashmap
+
+                startActivity(new Intent(getApplicationContext(), CardsForGivenTopic.class));
+
+
                 System.out.println("hello world123");
             }
         });
@@ -74,7 +79,7 @@ public class CreateNotecards extends AppCompatActivity {
     //    list.add(0, "hello world");
         //adapter.notifyItemRangeInserted(0, list.size());
         adapter.notifyItemInserted(0);
-        PersistentData.savePersistantData(this, adapter.flashcardTopics);
+        PersistentData.persistenceSaveTopics(this, adapter.flashcardTopics);
 
 
     }
