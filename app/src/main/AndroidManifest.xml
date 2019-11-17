@@ -9,13 +9,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FlipperViewFrontBackFlash"
-            android:parentActivityName=".CardsForGivenTopic"
+        <activity android:name=".EndingScreen"
             android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".QuizScreen"
+            android:parentActivityName=".QuizSelectCategory"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".QuizSelectCategory"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".FlipperViewFrontBackFlash"
+            android:parentActivityName=".CardsForGivenTopic"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".CardsForGivenTopic"
             android:parentActivityName=".CreateNotecards"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".CreateNotecards"
             android:parentActivityName=".MainActivity"

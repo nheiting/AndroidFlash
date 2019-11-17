@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHolder> {
@@ -23,6 +24,7 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
 
     private Activity activity;
     private OnItemClickListener mListener;
+    private boolean allowsRemoveItem;
     public ArrayList<String> flashcardTopics = new ArrayList<String>();
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -61,10 +63,11 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
 
 
 
-    public NoteCardAdapter(List<String> flashCardTopics, Activity activity) {
+    public NoteCardAdapter(List<String> flashCardTopics, Activity activity, boolean allowsRemoveItem) {
 
         this.flashcardTopics.addAll(flashCardTopics);
         this.activity = activity;
+        this.allowsRemoveItem = allowsRemoveItem;
     }
 
 
@@ -116,11 +119,22 @@ public class NoteCardAdapter extends RecyclerView.Adapter<NoteCardAdapter.ViewHo
     //This removes the data from our dataset
     private void removeItem(String topic) {
 
+        if(allowsRemoveItem) {
 
-        int position = flashcardTopics.indexOf(topic);
-        flashcardTopics.remove(position);
-        notifyItemRemoved(position);
-        PersistentData.persistenceSaveTopics(this.activity, flashcardTopics);
+            int position = flashcardTopics.indexOf(topic);
+            flashcardTopics.remove(position);
+            notifyItemRemoved(position);
+            PersistentData.persistenceSaveTopics(this.activity, flashcardTopics);
+
+            //Remove the set of notecards for that topic
+            HashMap<String, ArrayList<Flashcard>> map = PersistentData.persistenceLoadCardsGivenTopic(activity);
+            map.put(topic, null);
+            PersistentData.persistenceSaveCardsForATopic(activity, map);
+
+        }
+        else {
+            return;
+        }
 
     }
 

@@ -7,7 +7,7 @@
     tools:context=".CreateNotecards">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/flashList"
+        android:id="@+id/quizList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="125dp"
@@ -16,28 +16,15 @@
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/editText"
+    <TextView
+        android:id="@+id/categoryText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="24dp"
-        android:ems="10"
-        android:hint="Category"
-        android:inputType="textPersonName"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="32dp"
+        android:text="Select category"
+        android:textSize="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button2"
-        android:onClick="addCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="24dp"
-        android:text="Add category"
-        android:textAllCaps="false"
-        app:layout_constraintStart_toEndOf="@+id/editText"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

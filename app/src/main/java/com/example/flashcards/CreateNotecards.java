@@ -18,11 +18,10 @@ import java.util.List;
 
 public class CreateNotecards extends AppCompatActivity {
 
-    public Context createNotecardContext;
 
-    private String EMPTY_STRING = "";
+    //topic passed when going to the cards for given topic activity
+    public static final String TOPIC_PASSED = "com.example.flashcards.TOPIC_PASSED";
 
-    private static final String TAG = CreateNotecards.class.getSimpleName();
 
     private EditText addTopicText;
     private ArrayList<String> list;
@@ -33,14 +32,13 @@ public class CreateNotecards extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_notecards);
 
-        createNotecardContext = getApplicationContext();
         list = PersistentData.persistenceLoadTopics(this);
         addTopicText = findViewById(R.id.editText);
 
 
 
 
-        adapter = new NoteCardAdapter(list, this);
+        adapter = new NoteCardAdapter(list, this, true);
         RecyclerView.LayoutManager mgr = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
 
@@ -56,10 +54,10 @@ public class CreateNotecards extends AppCompatActivity {
                 //Pass the string name of the topic to the activity so that it knows
                 //the key to store data in hashmap
 
-                startActivity(new Intent(getApplicationContext(), CardsForGivenTopic.class));
+                String topic = adapter.flashcardTopics.get(position);
+                startActivity(new Intent(getApplicationContext(), CardsForGivenTopic.class).putExtra(TOPIC_PASSED, topic));
 
 
-                System.out.println("hello world123");
             }
         });
 
@@ -74,10 +72,17 @@ public class CreateNotecards extends AppCompatActivity {
             return;
         }
 
-      //  adapter.notifyItemRangeRemoved(0, list.size());
+
+        if(adapter.flashcardTopics.contains(addTopicText.getText().toString())) {
+            Toast.makeText(getApplicationContext(), "Already have that category. To delete it, tap and hold category for 2 seconds.", Toast.LENGTH_SHORT).show();
+            return;
+
+        }
+
         adapter.flashcardTopics.add(0, addTopicText.getText().toString());
-    //    list.add(0, "hello world");
-        //adapter.notifyItemRangeInserted(0, list.size());
+        Toast.makeText(getApplicationContext(), "Added " + addTopicText.getText().toString() + "to table.", Toast.LENGTH_SHORT).show();
+
+
         adapter.notifyItemInserted(0);
         PersistentData.persistenceSaveTopics(this, adapter.flashcardTopics);
 

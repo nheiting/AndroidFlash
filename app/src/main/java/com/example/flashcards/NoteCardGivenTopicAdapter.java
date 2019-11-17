@@ -71,6 +71,11 @@ public class NoteCardGivenTopicAdapter extends RecyclerView.Adapter<NoteCardGive
         //Load data for topic
         map = PersistentData.persistenceLoadCardsGivenTopic(activity);
 
+        //Create new array list if the one for the topic is null
+        if(map.get(topic) == null) {
+            map.put(topic, new ArrayList<Flashcard>());
+        }
+
         this.flashcardsGivenTopic.addAll(map.get(topic));
         this.activity = activity;
     }
@@ -100,7 +105,7 @@ public class NoteCardGivenTopicAdapter extends RecyclerView.Adapter<NoteCardGive
             public boolean onLongClick(View view) {
 
 
-                removeItem(flashcardsGivenTopic.get(position).getFrontText());
+                removeItem(position);
                 return true;
 
             }
@@ -122,12 +127,13 @@ public class NoteCardGivenTopicAdapter extends RecyclerView.Adapter<NoteCardGive
     }
 
     //This removes the data from our dataset
-    private void removeItem(String topic) {
+    private void removeItem(int position) {
 
 
-        int position = flashcardsGivenTopic.indexOf(topic);
+
         flashcardsGivenTopic.remove(position);
         notifyItemRemoved(position);
+
 
         map.put(topic, flashcardsGivenTopic);
         PersistentData.persistenceSaveCardsForATopic(this.activity, map);

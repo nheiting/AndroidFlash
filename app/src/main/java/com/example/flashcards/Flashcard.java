@@ -1,6 +1,8 @@
 package com.example.flashcards;
 
-public class Flashcard {
+import java.io.Serializable;
+
+public class Flashcard implements Serializable {
 
     private String front;
     private String back;
@@ -21,6 +23,10 @@ public class Flashcard {
 
     @Override
     public boolean equals(Object obj) {
+
+        if(obj == null) {
+            return  false;
+        }
 
         return this.getFrontText().equals(((Flashcard) obj).getFrontText());
 

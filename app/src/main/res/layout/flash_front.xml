@@ -18,12 +18,13 @@
         app:srcCompat="@drawable/notecard" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/flashFrontText"
         android:layout_width="218dp"
         android:layout_height="55dp"
         android:layout_marginStart="244dp"
         android:layout_marginTop="92dp"
         android:ems="10"
+        android:hint="Question goes here"
         android:inputType="textImeMultiLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
